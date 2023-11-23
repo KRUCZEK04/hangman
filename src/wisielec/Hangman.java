@@ -9,24 +9,22 @@ import java.util.Scanner;
 //TODO: Obiekty: Password, Hangman, PasswordGueser, LifeChecker
 public class Hangman {
 
-    private String password;
+    private Password password;
     private boolean isGuessed = false;
     private int lives;
     private char[] currentState;
 
     public Hangman(String password) {
-        this.password = password;
+        this.password = new Password(password);
         this.currentState = new char[password.length()];
         this.lives = 6;
     }
 
     public void showHiddenPassword() {
-
-        for (int i = 0; i < password.length(); i++) {
+        for (int i = 0; i < password.getPassword().length(); i++) {
             System.out.print("_");
             currentState[i] = '_';
         }
-
     }
 
     public void play() {
@@ -49,14 +47,14 @@ public class Hangman {
     public void isLetterThere() {
         isGuessed = false;
         String guess = giveALetter();
-        char[] charArray = password.toCharArray();
+        char[] charArray = password.getPassword().toCharArray();
         for (int i = 0; i < charArray.length; i++) {
             if (charArray[i] == guess.charAt(0)) {
                 currentState[i] = guess.charAt(0);
-                showState();
                 isGuessed = true;
             }
         }
+        showState();
         System.out.println();
     }
     public boolean isGameWon(){
@@ -64,7 +62,7 @@ public class Hangman {
     }
 
     public void showState() {
-        for (int i = 0; i < password.length(); i++) {
+        for (int i = 0; i < password.getPassword().length(); i++) {
             System.out.print(currentState[i]);
         }
     }
