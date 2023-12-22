@@ -1,16 +1,29 @@
 package wisielec;
 
-public class Password implements WordProvider {
-    private String value;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-    public Password(String value) {
-        this.value = value;
+//TODO: Podzielić elementy ze string value na liste haseł
+//TODO: W metodzie getPassword będziemy losować 1 HASŁO z tej listy
+public class Password {
+    private String value;
+    private List<String> randomPasswords;
+    private WordProvider wordProvider;
+
+    public Password(String fileName) {
+        wordProvider = new FileWordProvider();
+        this.value = wordProvider.getPassword(fileName);
     }
 
-    @Override
-    public String getPassword() {
-        //TODO: Get value from file
+    public String getValue() {
         return value;
     }
 
+
+
 }
+
