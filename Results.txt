@@ -1,0 +1,6 @@
+ wisielec.ResultsTable@377dca04
+ wisielec.ResultsTable@21b8d17c
+ wisielec.ResultsTable@439f5b3d
+ wisielec.ResultsTable@5197848c
+ ResultsTable{playerName='Adam', points=-27, todayDate=2024-01-04, gameTime=17}
+ ResultsTable{playerName='Adam', points=176, todayDate=2024-01-04, gameTime=14}

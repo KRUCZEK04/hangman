@@ -1,22 +1,53 @@
 package wisielec;
-import java.util.Scanner;
-public class Hangman {
-    private int points;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Scanner;
+
+public class Hangman {
+    private int goodGuesses;
+    private int badGuess;
     private Password password;
     private boolean isGuessed = false;
     private int lives;
     private char[] currentState;
+    private long gameTime;
+
+    @Override
+    public String toString() {
+        return "Hangman{" +
+                "gameTime=" + gameTime +
+                ", playerName='" + playerName + '\'' +
+                ", points=" + points +
+                ", localDate=" + localDate +
+                '}';
+    }
+
+    private long timeStart;
+    private String chosenDifficulty;
+    private PointsCalculator pointsCalculator = new PointsCalculator();
+    private String playerName;
+    private int points;
+    private LocalDate localDate;
 
     public Hangman(Difficulty difficulty) {
         String fileName = "";
-        switch (difficulty){
-            case EASY -> {this.lives = 10;
-            fileName = "Keys.txt";}
-            case MEDIUM -> {this.lives = 6;
-            fileName ="KeysMedium.txt";}
-            case HARD -> {this.lives = 3;
-            fileName ="KeysHard.txt";}
+        switch (difficulty) {
+            case EASY -> {
+                this.lives = 10;
+                fileName = "Keys.txt";
+                this.chosenDifficulty = "Easy";
+            }
+            case MEDIUM -> {
+                this.lives = 6;
+                fileName = "KeysMedium.txt";
+                this.chosenDifficulty = "Medium";
+            }
+            case HARD -> {
+                this.lives = 3;
+                fileName = "KeysHard.txt";
+                this.chosenDifficulty = "Hard";
+            }
         }
         this.password = new Password(fileName);
         this.currentState = new char[password.getValue().length()];
@@ -31,22 +62,42 @@ public class Hangman {
     }
 
 
-    public void play() {
-
+    public void play() throws IOException {
+        System.out.println("Enter your players name");
+        Scanner scanner = new Scanner(System.in);
+        this.playerName = scanner.nextLine();
+        timeStart = System.currentTimeMillis();
         showHiddenPassword();
         while (lives > 0 && !isGameWon()) {
             isLetterThere();
             if (isGuessed) {
                 System.out.println("You guessed a letter!");
+                goodGuesses++;
             } else {
                 System.out.println(getHangmanDrawing(lives));
                 lives--;
+                badGuess++;
                 System.out.println("Try again! You have " + lives + " lives left");
             }
         }
+        this.gameTime = (System.currentTimeMillis() - timeStart) / 1000;
+        this.localDate = LocalDate.now();
+        FileSaver fileSaver = new FileSaver();
         if (isGameWon()) {
-            System.out.println("Congratulations you won!");
-        } else System.out.println("You lost!");
+            saveResultsToFile(fileSaver);
+        } else {
+            System.out.println("You lost!");
+            this.points = pointsCalculator.calculatePointLost(goodGuesses, gameTime,badGuess, chosenDifficulty);
+            ResultsTable resultsTable2 = new ResultsTable(playerName, points, localDate, gameTime);
+            fileSaver.saveToFile(resultsTable2);
+        }
+    }
+
+    private void saveResultsToFile(FileSaver fileSaver) throws IOException {
+        this.points = pointsCalculator.calculatePointsWon(gameTime, badGuess, chosenDifficulty);
+        ResultsTable resultsTable = new ResultsTable(playerName, points, localDate, gameTime);
+        fileSaver.saveToFile(resultsTable);
+        System.out.println("Congratulations you won!");
     }
 
     public void isLetterThere() {

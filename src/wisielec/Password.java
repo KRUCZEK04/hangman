@@ -11,7 +11,6 @@ import java.util.List;
 //TODO: W metodzie getPassword będziemy losować 1 HASŁO z tej listy
 public class Password {
     private String value;
-    private List<String> randomPasswords;
     private WordProvider wordProvider;
 
     public Password(String fileName) {
