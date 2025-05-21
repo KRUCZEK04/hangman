@@ -2,6 +2,8 @@ package wisielec;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Hangman {
@@ -22,6 +24,7 @@ public class Hangman {
                 ", localDate=" + localDate +
                 '}';
     }
+
 
     private long timeStart;
     private String chosenDifficulty;
